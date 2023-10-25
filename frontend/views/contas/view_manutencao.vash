@@ -1,0 +1,87 @@
+@html.extend('layout', function(model){
+
+@html.block('content', function(model){
+
+<main>
+
+    <div class="container-fluid px-4">
+        <h1 class="" style="text-align: center;">Manutenção de Contas</h1>
+        <div class="sb-sidenav-footer">
+            <div class="small" style="text-align:center; font-style: italic">Bem vindo: @model.userName</div>
+        </div><br>
+
+        
+            <ol class="breadcrumb"><li class="breadcrumb-item active" style="margin-top: 3mm; margin-left: 3mm; ">Deseja adicionar uma nova Conta?
+                <button type="button" style="margin-top: ;" class="btn btn-secondary" onclick="window.location.href = '/contas/openContasInsert'">Nova Conta</button>
+            </li></ol><br>
+
+        <div class="row">
+            <div class="col-xl-12">
+               
+                </div>
+                </div>
+                
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card mb-4">
+                <ol class="breadcrumb"><li class="breadcrumb-item active" style="margin-left: 3mm;">Deseja baixar arquivos de contas?</li></ol>
+                
+                    <div class="card-body">
+                        <table id="example" class="stripe" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>Ação</th>                                    
+                                    <th>Descrição</th>
+                                    <th>Valor</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @model.data.registro.forEach(function(registro){
+                                <tr>
+                                    <td><a href="/contas/openContasUpdate/@registro.contaid" class="btn btn-secondary btn-sm"><i class="fa fa-magnifying-glass"></i>Visualizar</a></td>
+                                    <td>@registro.descricaoconta</td>
+                                    <td>@registro.valorconta</td>
+                                </tr>
+                                })
+                            </tbody>
+
+                             <tfoot>
+                                <tr>
+                                    <th>Ação</th>                                    
+                                    <th>Descrição</th>
+                                    <th>Descrição</th> 
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</main>
+
+})
+
+})
+
+<script>
+    var table = new DataTable('#example', {
+        dom: 'B<"top"fi>rt<"bottom"lp><"clear">',
+        columnDefs: [
+            {
+                targets: 2,
+                render: DataTable.render.datetime('DD/MM/YYYY')
+            }
+        ],
+        buttons: [
+            'copy', 'csv', 'pdf'
+        ],
+    });
+
+    table.buttons().container()
+        .appendTo($('.col-sm-12:eq(0)', table.table().container()));
+</script>

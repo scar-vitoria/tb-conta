@@ -1,0 +1,59 @@
+### Login
+POST http://localhost:40000/Login HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzQ3ODI5NzksInVzZXJuYW1lIjoicXdlIn0.SlYYCm8J6wlpb3i1jJcSvhSz6VjwKvzPOxza8P6-hzo
+
+{    
+    "username": "qwe",
+    "password": "qwe"
+}
+
+### teste de buscar todas as contas
+GET http://localhost:40000/getAllContas HTTP/1.1
+content-type: application/json
+//Authorization: Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpYXQiOjE2OTY0NTkzMzUsImV4cCI6MTY5NjQ1OTkzNX0.g1yS3lLNBbagExvyoN2sAJ9_cv4psHLjtWScdBmULeU
+
+{    
+    
+}
+
+### teste de buscar conta por ID
+POST http://localhost:40000/getContaByID HTTP/1.1
+content-type: application/json
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE2NzQ3ODI5NzksInVzZXJuYW1lIjoicXdlIn0.SlYYCm8J6wlpb3i1jJcSvhSz6VjwKvzPOxza8P6-hzo
+
+{    
+    "contaid": 5
+}
+
+### teste de inserção de contas
+POST http://localhost:40000/insertContas HTTP/1.1
+content-type: application/json
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InF3ZSIsImlhdCI6MTY5MTQzNTg3MSwiZXhwIjoxNjkxNDM2NDcxfQ.hAh0VyRfEXvYmhunlJALD-qda8pYr2zzAHobn1yua20
+
+{  
+    "descricaoConta": "Materiais de escritório",
+    "valorConta": 157.33,
+    "deleted": false
+}
+
+### teste de atualização de conta
+POST http://localhost:40000/updateContas HTTP/1.1
+content-type: application/json
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InF3ZSIsImlhdCI6MTY5NzA0MTQzMiwiZXhwIjoxNjk3MDQyMDMyfQ.kyp_ch9aalqvAAjAwusqhb8AbGu6N2ErKcF-FQFU-xg
+
+{    
+    "contaid": 6,
+    "descricaoConta": "Pgto Func",
+    "valorConta": 1780.00,
+    "deleted": false
+}
+
+### teste de deletar conta
+POST http://localhost:40000/DeleteContas HTTP/1.1
+content-type: application/json
+//Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InF3ZSIsImlhdCI6MTY5NzA0MTQzMiwiZXhwIjoxNjk3MDQyMDMyfQ.kyp_ch9aalqvAAjAwusqhb8AbGu6N2ErKcF-FQFU-xg
+
+{    
+    "contaid": 11
+}

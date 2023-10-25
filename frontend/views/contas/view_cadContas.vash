@@ -1,0 +1,311 @@
+@html.extend('layout', function(model){ @html.block('content', function(model){
+
+
+<main>
+
+    <div class="container-fluid px-4">
+        <h1 class="mt-2" style="text-align: center;">@model.title</h1>
+        <ol class="breadcrumb mb-2">
+      <li class="breadcrumb-item active">@model.title</li>
+    </ol>
+        
+        <div class="row">
+            <div class="col-xl-12">
+
+                <div class="card-header">
+
+                </div>
+
+                <div class="card-body" >
+                    <div class="col-xl-6">
+                        <form  id="form">
+                            <div class="mb-1" style="display: none">
+                                <input type="number" name="contaid" class="form-control" id="contaid" >
+                            </div>
+
+                            <div class="mb-1">
+                                <label for="descricaoConta" class="form-label">Descrição</label>
+                                <input type="text" name="descricaoConta" class="form-control" id="descricaoConta" required >
+                            </div>
+
+                            
+                            <div class="mb-1">
+                                <label for="valorConta" class="form-label">ValorConta</label>
+                                <input type="text" name="valorConta"  class="form-control" id="valorConta" data-thousands="." data-decimal="." required>
+                            </div>  
+                        </form>
+
+                        <div class="">
+
+                        <button type="button" class="btn btn-secondary " onclick="btnSalvar()" id="btnSalvar">
+                        Salvar
+                        </button>
+                
+                        <button type="button" class="btn btn-secondary" onclick="btnAlterar()" id="btnAlterar">
+                        Alterar
+                        </button>
+                        
+                       
+                          <button type="button" class="btn btn-secondary" onclick="btnSalvarAlteracao()" id="btnSalvarAlteracao" >
+                          Salvar Alteração
+                          </button>
+                        
+
+                        <button type="button" class="btn btn-secondary" onclick="btnCancelarAlteracao()" id="btnCancelarAlteracao">
+                        Cancelar Alteração
+                        </button>
+                        
+                        
+                          <button type="button" class="btn btn-danger" onclick="btnRemover()" id="btnRemover">
+                          Remover
+                          </button>
+                        
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href = '/contas'" id="btnFechar">
+                        Fechar
+                        </button>
+                        </div>
+                
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+}) })
+
+<script>
+  const form = document.getElementById("form");
+  var oper = "@model.oper";
+
+  window.onload = limpaForm();
+
+  //@ Limpa o conteúdo dos campos do formulário
+  async function limpaForm() {
+
+    $("#form").each(function() {
+      this.reset();
+    });
+
+    // Mostra os botões de acordo com o tipo da operação
+    if (oper == "c") {
+      $("#btnSalvar").prop("hidden", false);
+      habilitaForm();
+    }
+
+    if (oper == "u") {
+      $("#btnAlterar").prop("hidden", false);
+    }
+
+    //Necessário para buscar dados de acordo com o ID para serem alterados
+    if (oper == "u") {
+      idBusca = "@model.idBusca";
+      await getDados(idBusca);
+    }
+
+    //Coloca o curso no primeiro campo do formulário
+    $("#codigo").focus();
+  }
+
+  //@ Busca os dados de acordo com o ID para serem alterados
+  async function getDados(idBuscaPar) {
+    console.log("[getDados] idBusca", idBuscaPar);
+    try {
+      const resp = await axios.post(
+        "/contas/getDados", {
+          idBusca: idBuscaPar
+        }, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (resp.data.status == "ok") {
+        $("#contaid").val(resp.data.registro.contaid);
+        $("#descricaoConta").val(resp.data.registro.descricaoConta);
+        $("#valorConta").val(resp.data.registro.valorConta);
+
+      } else {
+        alert("Houve erro ao buscar os dados das contas!");
+      }
+    } catch (error) {
+      alert("[view_cadContas|getDados]Ocorreu um erro inesperado!" + error);
+    }
+  }
+
+  //@ Valida o formulário antes de salvá-lo
+  function validaForm(formDataPar) {
+    var validado = true;
+    $("#form input, #form select").each(function(index) {
+      var input = $(this);
+      if (
+        input.attr("type") == "text" &&
+        input.prop("required") &&
+        String(input.val()).length == 0
+      ) {
+        alert("Campo obrigatório");
+        //console.log('Type: ' + input.attr('type') + ' ID: ' + input.attr('id') + ' Name: ' + input.attr('name') + ' Value: ' + input.val() + ' Obrigatori: ' + input.prop("required"));
+        $(input).focus();
+        validado = false;
+        return false;
+      }
+    });
+    formDataPar.set("deleted", false);
+
+    return validado;
+  }
+
+//@ Salva os dados
+  async function btnSalvar() {
+    const formData = new FormData(form);
+
+    const validado = validaForm(formData);
+    if (!validado) {
+      return;
+    }
+
+    try {
+      resp = await axios.post("/contas/insertContas", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (resp.status == "ok") {
+        alert("foi"+resp.data.mensagem);
+        limpaForm();
+      } else 
+        alert("Houve um erro: " + resp.data.mensagem);
+      } catch (error) {
+      alert("[view_cadContas|btnSalvar]Ocorreu um erro inesperado!" + error);
+    }
+  }
+
+  //@ Habilita form para alteração
+  function habilitaForm() {
+    $("#descricaoConta").prop("class", "form-control");
+    $("#descricaoConta").prop("readonly", false);
+
+    $("#valorConta").prop("class", "form-control");
+    $("#valorConta").prop("readonly", false);
+
+  }
+
+  //@ Habilita a alteração
+  async function btnAlterar() {
+    $("#btnSalvarAlteracao").prop("hidden", false);
+    $("#btnCancelarAlteracao").prop("hidden", false);
+    $("#btnRemover").prop("hidden", false);
+    $("#btnAlterar").prop("hidden", true);
+
+    habilitaForm();
+  }
+
+  //@ Salva a alteração
+  //@ console.log("[view_cadContas|btnSalvarAlteracao] :", )
+  async function btnSalvarAlteracao() {
+    const formData = new FormData(form);
+    const validado = validaForm(formData);
+    if (!validado) {
+      return;
+    }
+
+    try {
+      resp = await axios.post("/contas/updateContas", formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (resp.data.status == "ok") {
+        alert(resp.data.mensagem);
+        window.open("/contas/openContasUpdate/" + String($("#contaid").val()), "_self");
+      } else {
+        alert("Houve um erro: " + resp.data.mensagem);
+      }
+    } catch (error) {
+      alert("[view_cadContas|btnSalvarAlteracao]Ocorreu um erro inesperado!" + error);
+    }
+
+
+  }
+
+  //@ Cancela a alteração
+  //@ console.log("[view_cadContas|btnCancelarAlteracao] Valor do id", $("#contaid").val());    
+  async function btnCancelarAlteracao() {
+    window.open("/contas/openContasUpdate/" + String($("#contaid").val()), "_self");
+  }
+
+  //@ Remove curso
+  //@ console.log("[view_cadContas|btnSalvarAlteracao] :", )
+  async function btnRemover() { 
+
+    var confirma = confirm("Deseja realmente remover o registro?");
+    if (!confirma) {
+      return; //@ Se o usuário selecionar Cancela, o registro não é removido.
+    }
+    const formData = new FormData(form);
+
+    try {
+      resp = await axios.post("/contas/DeleteContas", {
+        contaid: formData.get("contaid")
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (resp.data.status == "ok") {
+        alert(resp.data.mensagem);
+        window.open("/contas", "_self");
+      } else {
+        alert("Houve um erro: " + resp.data.mensagem);
+      }
+    } catch (error) {
+      alert("[view_cadContas|btnSalvarAlteracao]Ocorreu um erro inesperado!" + error);
+    }
+  }
+
+
+  $(function() {
+    $("#valorConta").maskMoney();
+  });
+
+  async function DeleteContas(contaidPar) {
+    resp = await axios.post(
+      "/contas/DeleteContas", {
+        id: $("#id").val(),
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (resp.data.status == "ok") {
+      alert("Conta removida com sucesso!");
+      window.open("/contas", "_self");
+    } else {
+      alert("Houve erro ao remover os dados das contas!");
+    }
+  }
+
+  async function testeFormData() {
+    const form = document.getElementById("form");
+    const formData = new FormData(form);
+
+    // for (const [key, value] of formData) {
+    //     console.log("Valores:" + `${key}: ${value}`);
+    // }
+
+    console.log("contaid: ", formData.get("contaid"));
+  }
+</script>
+
+<style>
+  .required:after {
+    content: " *";
+    color: red;
+  }
+</style>

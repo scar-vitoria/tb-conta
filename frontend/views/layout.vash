@@ -1,0 +1,36 @@
+ @html.include("header")
+ <body>
+    
+    <div>
+        <ul class="" style="list-style-type: none; overflow: hidden; background-color: #dfdfdf;">
+            <li class="estilo-li"><a class="estilo-a" href="/">Home</a></li>
+            <li class="estilo-li"><a class="estilo-a" href="/contas">Manutenção de Contas</a></li>            
+            <li class="estilo-li"><a class="estilo-a" href="/Logout">Sair</a></li>
+        </ul>
+    </div>
+
+
+
+    <!-----Início Páginas filhas ----->
+    <div id="layoutSidenav_content">
+
+    <!-----Início Páginas filhas ----->
+    @html.block('content')
+
+    <!-----Fim Páginas filhas ----->
+    <div class="" style="margin-top: 28%">
+    </div>
+    @html.include('footer')
+    </div>
+    
+  <script src="/js/5.3.0/popper.js_2.11.8_popper.min.js" ></script>
+    <script src="/js/5.3.0/bootstrap.min.js"></script>
+    <script src="/js/scripts.js"></script> 
+    <script src="/js/fontawesome/v6.3.0_js_all.js" crossorigin="anonymous"></script>   
+    <script src="/js/datatables/pdfmake_0.2.7_pdfmake.min.js"></script>
+    <script src="/js/datatables/pdfmake_0.2.7_vfs_fonts.js"></script>
+    <script src="/js/datatables/html5-2.4.1_datatables.min.js"></script>    
+    <script src="/js/datatables/moment_2.29.2_moment.min.js"></script>
+    <script src="/js/jquery.maskMoney.min.js"></script> 
+    <script src="/js/axios.min.js"></script>
+</body>

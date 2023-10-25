@@ -1,0 +1,8 @@
+@html.extend('layout', function(model) {
+  @html.block('content', function(model) {
+    <h1 style="text-align: center;">Gerenciamento de Contas</h1>
+    <div class="sb-sidenav-footer">
+        <div class="small" style="text-align:center; font-style: italic">Bem vindo: @model.userName</div>
+    </div>
+  })
+})
